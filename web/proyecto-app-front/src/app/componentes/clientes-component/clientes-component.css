@@ -1,0 +1,221 @@
+h2 {
+    color: #1b2c58;
+    margin-bottom: 10px;
+}
+
+/* === Formulario === */
+.formulario {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    background: #f9fafc;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.formulario .fila {
+    display: flex;
+    flex-direction: column;
+}
+
+.formulario label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.formulario input {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.formulario button {
+    grid-column: 1 / -1;
+    background: #0b57d0;
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.formulario button:hover {
+    background: #0948a8;
+}
+
+/* === Tabla === */
+.clientes-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.clientes-tabla th,
+.clientes-tabla td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.clientes-tabla th {
+    background: #f4f6fa;
+    text-align: left;
+}
+
+.error {
+    color: red;
+    margin-top: 8px;
+}
+
+.val {
+    color: #d93025;
+    /* rojo Google-style */
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+input.ng-invalid.ng-touched {
+    border-color: #d93025;
+    background: #fff5f5;
+}
+
+/* === Botón principal === */
+.formulario button {
+    grid-column: 1 / -1;
+    background-color: #0b57d0;
+    /* azul activo */
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.formulario button:hover {
+    background-color: #0948a8;
+    /* azul más oscuro al pasar el mouse */
+    transform: translateY(-1px);
+}
+
+/* === Botón deshabilitado === */
+.formulario button:disabled {
+    background-color: #b0bec5;
+    /* gris azulado */
+    color: #eceff1;
+    cursor: not-allowed;
+    transform: none;
+    opacity: 0.8;
+}
+
+/* === Campos y validaciones (para contexto) === */
+.formulario {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    background: #f9fafc;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.formulario .fila {
+    display: flex;
+    flex-direction: column;
+}
+
+.formulario label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.formulario input {
+    padding: 6px 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+input.ng-invalid.ng-touched {
+    border-color: #d93025;
+    background: #fff5f5;
+}
+
+.val {
+    color: #d93025;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.edit-banner {
+    background: #fff8e1;
+    border: 1px solid #ffe082;
+    color: #8d6e63;
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    display: inline-block;
+}
+
+/* Botón principal */
+.acciones-form button {
+    background-color: #0b57d0;
+    color: #fff;
+    border: none;
+    padding: 10px 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    margin-right: 8px;
+    margin-top: 6%;
+}
+
+.acciones-form button:hover {
+    background-color: #0948a8;
+}
+
+.acciones-form button:disabled {
+    background-color: #b0bec5;
+    color: #eceff1;
+    cursor: not-allowed;
+    opacity: .85;
+}
+
+/* Botón secundario */
+.acciones-form .secundario {
+    background: #f1f3f4;
+    color: #1f1f1f;
+}
+
+.acciones-form .secundario:hover {
+    background: #e7eaed;
+}
+
+/* Botón “Editar” tipo link */
+
+button.link {
+    background: transparent;
+    color: #0b57d0;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 14px;
+}
+
+button.link:hover {
+    color: #0948a8;
+}
+
+button.link.rojo {
+    color: #d93025;
+}
+
+button.link.rojo:hover {
+    color: #b71c1c;
+}

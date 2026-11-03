@@ -1,0 +1,57 @@
+/* Contenedor del nav */
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 16px;                  /* separación entre ítems */
+  padding: 10px 14px;
+  border-bottom: 1px solid #e6e8eb;
+  background: #fff;
+}
+
+/* Estilo base de los links */
+.topnav a {
+  text-decoration: none;
+  color: #1b2c58;             /* azul oscuro suave */
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 160ms ease, color 160ms ease, transform 80ms ease;
+}
+
+/* Separadores visuales (opcional) */
+.topnav a + a {
+  position: relative;
+}
+.topnav a + a::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 1.25em;
+  background: #e0e3e7;
+}
+
+/* Hover / foco */
+.topnav a:hover,
+.topnav a:focus-visible {
+  background: #f3f5f8;
+}
+
+/* Activo (routerLinkActive) */
+.topnav a.active {
+  background: #e8eefc;
+  color: #0b57d0;
+}
+
+/* Responsive: en pantallas angostas, apila */
+@media (max-width: 520px) {
+  .topnav {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .topnav a + a::before {
+    display: none; /* sin separador vertical en móvil */
+  }
+}

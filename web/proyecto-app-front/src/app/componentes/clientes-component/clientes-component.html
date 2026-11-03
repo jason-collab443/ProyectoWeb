@@ -1,0 +1,99 @@
+<h2>Gestión de Clientes</h2>
+
+@if (editandoId() !== null) {
+<div class="edit-banner"> Editando cliente #{{ editandoId() }}</div>
+}
+
+<form [formGroup]="form" (ngSubmit)="guardar()" class="formulario">
+ 
+    <div class="fila">
+        <label>Nombre</label>
+        <input formControlName="nombre" placeholder="Nombre completo" />
+        @if (form.get('nombre')?.touched && form.get('nombre')?.invalid) {
+        <small class="val"> El nombre es obligatorio.</small>
+        }
+    </div>
+
+    <div class="fila">
+        <label>Correo</label>
+        <input formControlName="correo" placeholder="correo@ejemplo.com" type="email" />
+        @if (form.get('correo')?.touched && form.get('correo')?.hasError('required')) {
+        <small class="val"> El correo es obligatorio.</small>
+        } @else if (form.get('correo')?.touched && form.get('correo')?.hasError('email')) {
+        <small class="val"> Formato de correo inválido.</small>
+        }
+    </div>
+
+    <div class="fila">
+        <label>Teléfono</label>
+        <input formControlName="telefono" placeholder="3001234567" />
+        @if (form.get('telefono')?.touched && form.get('telefono')?.hasError('required')) {
+        <small class="val"> El teléfono es obligatorio.</small>
+        } @else if (form.get('telefono')?.touched && form.get('telefono')?.hasError('pattern')) {
+        <small class="val">Solo dígitos (7–15).</small>
+        }
+    </div>
+
+    <div class="fila">
+        <label>Fecha Registro</label>
+        <input formControlName="fechaRegistro" type="date" />
+        @if (form.get('fechaRegistro')?.touched && form.get('fechaRegistro')?.hasError('required')) {
+        <small class="val"> La fecha es obligatoria.</small>
+        }
+    </div>
+
+    <div class="acciones-form">
+        <button type="submit" [disabled]="form.invalid || guardando()">
+            {{ editandoId() !== null ? (guardando() ? 'Actualizando…' : 'Actualizar') : (guardando() ? 'Guardando…' :
+            'Guardar') }}
+        </button>
+
+        @if (editandoId() !== null) {
+        <button type="button" class="secundario" (click)="cancelarEdicion()" [disabled]="guardando()">Cancelar</button>
+        }
+    </div>
+</form>
+
+<hr />
+
+@if (cargandoLista()) {
+<div>Cargando...</div>
+}
+
+@if (error()) {
+<div class="error">{{ error() }}</div>
+}
+
+@if (!cargandoLista() && clientes().length > 0) {
+<table class="clientes-tabla">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Fecha Registro</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (c of clientes(); track c.id) {
+        <tr>
+            <td>{{ c.id }}</td>
+            <td>{{ c.nombre }}</td>
+            <td>{{ c.correo }}</td>
+            <td>{{ c.telefono }}</td>
+            <td>{{ c.fechaRegistro }}</td>
+            <td class="acciones">
+                <button type="button" class="link" (click)="editar(c)">Editar</button> |
+                <button type="button" class="link rojo" (click)="eliminar(c)">Eliminar</button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+} @else {
+@if (!cargandoLista() && !error()) {
+<div>No hay clientes registrados.</div>
+}
+}
