@@ -1,100 +1,153 @@
-<section class="pagos">
-  <h2>Gestión de pagos</h2>
-
-  @if (editandoId() !== null) {
-    <p class="aviso">Editando pago #{{ editandoId() }}</p>
-  }
-
-  <form [formGroup]="form" (ngSubmit)="guardar()" class="formulario">
-    <div class="campo">
-      <label for="referencia">Referencia</label>
-      <input id="referencia" formControlName="referencia" maxlength="60" required />
-      @if (form.controls.referencia.touched && form.controls.referencia.invalid) {
-        <small class="validacion">La referencia es obligatoria (máximo 60 caracteres).</small>
-      }
+<main class="pagos">
+  <header class="hero">
+    <div class="hero-contenido">
+      <h1>Gestión de pagos</h1>
     </div>
+  </header>
 
-    <div class="campo">
-      <label for="facturaNumero">Número de factura (opcional)</label>
-      <input id="facturaNumero" formControlName="facturaNumero" maxlength="40" />
-      @if (form.controls.facturaNumero.touched && form.controls.facturaNumero.invalid) {
-        <small class="validacion">Máximo 40 caracteres.</small>
-      }
-    </div>
+  <section class="resumen" aria-label="Resumen de pagos">
+    <article class="resumen-tarjeta">
+      <div class="resumen-superior">01 / REGISTROS</div>
+      <strong>{{ pagos().length }}</strong>
+      <p>Pagos registrados</p>
+    </article>
+    <article class="resumen-tarjeta">
+      <div class="resumen-superior">02 / FACTURAS</div>
+      <strong>{{ pagosConFactura() }}</strong>
+      <p>Pagos con factura</p>
+    </article>
+    <article class="resumen-tarjeta">
+      <div class="resumen-superior">03 / MÉTODOS</div>
+      <strong>{{ metodosUtilizados() }}</strong>
+      <p>Métodos utilizados</p>
+    </article>
+  </section>
 
-    <div class="campo">
-      <label for="metodo">Método de pago</label>
-      <input id="metodo" formControlName="metodo" list="metodos-pago" maxlength="40" required />
-      <datalist id="metodos-pago">
-        <option value="Efectivo"></option>
-        <option value="Transferencia"></option>
-        <option value="Tarjeta crédito"></option>
-        <option value="PSE"></option>
-      </datalist>
-      @if (form.controls.metodo.touched && form.controls.metodo.invalid) {
-        <small class="validacion">El método es obligatorio (máximo 40 caracteres).</small>
-      }
-    </div>
+  <div class="contenido">
+    <section class="panel panel-formulario" id="formulario-pago" aria-labelledby="titulo-formulario">
+      <div class="panel-encabezado">
+        <span class="panel-icono">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg>
+        </span>
+        <div>
+          <span class="panel-kicker">{{ editandoId() !== null ? 'MODIFICAR REGISTRO' : 'NUEVO REGISTRO' }}</span>
+          <h2 id="titulo-formulario">{{ editandoId() !== null ? 'Editar pago' : 'Registrar pago' }}</h2>
+        </div>
+      </div>
+      <p class="panel-intro">Completa la información del pago para mantener tu registro al día.</p>
 
-    <div class="campo">
-      <label for="fecha">Fecha</label>
-      <input id="fecha" formControlName="fecha" type="date" required />
-      @if (form.controls.fecha.touched && form.controls.fecha.invalid) {
-        <small class="validacion">La fecha es obligatoria.</small>
-      }
-    </div>
-
-    <div class="acciones-formulario">
-      <button type="submit" [disabled]="form.invalid || guardando()">
-        {{ guardando() ? 'Guardando…' : editandoId() !== null ? 'Actualizar' : 'Guardar' }}
-      </button>
       @if (editandoId() !== null) {
-        <button type="button" class="secundario" (click)="cancelarEdicion()" [disabled]="guardando()">
-          Cancelar
-        </button>
+        <div class="aviso-edicion">Estás editando el pago #{{ editandoId() }}.</div>
       }
-    </div>
-  </form>
 
-  @if (error()) {
-    <p class="error" role="alert">{{ error() }}</p>
-  }
-
-  @if (cargandoLista()) {
-    <p>Cargando pagos…</p>
-  } @else if (pagos().length === 0) {
-    <p>No hay pagos registrados.</p>
-  } @else {
-    <div class="tabla-contenedor">
-      <table>
-        <thead>
-          <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Referencia</th>
-            <th scope="col">Factura</th>
-            <th scope="col">Método</th>
-            <th scope="col">Fecha</th>
-            <th scope="col">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (pago of pagos(); track pago.id) {
-            <tr>
-              <td>{{ pago.id }}</td>
-              <td>{{ pago.referencia }}</td>
-              <td>{{ pago.facturaNumero || '—' }}</td>
-              <td>{{ pago.metodo }}</td>
-              <td>{{ pago.fecha }}</td>
-              <td class="acciones-tabla">
-                <button type="button" (click)="editar(pago)" [disabled]="guardando() || eliminandoId() !== null">Editar</button>
-                <button type="button" class="eliminar" (click)="eliminar(pago)" [disabled]="guardando() || eliminandoId() !== null">
-                  {{ eliminandoId() === pago.id ? 'Eliminando…' : 'Eliminar' }}
-                </button>
-              </td>
-            </tr>
+      <form [formGroup]="form" (ngSubmit)="guardar()" class="formulario" novalidate>
+        <div class="campo">
+          <label for="referencia">Referencia <span class="requerido">*</span></label>
+          <input id="referencia" formControlName="referencia" maxlength="60" placeholder="Ej. REF-001" autocomplete="off" />
+          @if (form.controls.referencia.touched && form.controls.referencia.invalid) {
+            <small class="validacion">La referencia es obligatoria (máximo 60 caracteres).</small>
           }
-        </tbody>
-      </table>
-    </div>
-  }
-</section>
+        </div>
+
+        <div class="campo">
+          <label for="facturaNumero">Número de factura <span class="opcional">Opcional</span></label>
+          <input id="facturaNumero" formControlName="facturaNumero" maxlength="40" placeholder="Ej. FAC-001" autocomplete="off" />
+          @if (form.controls.facturaNumero.touched && form.controls.facturaNumero.invalid) {
+            <small class="validacion">Máximo 40 caracteres.</small>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="metodo">Método de pago <span class="requerido">*</span></label>
+          <input id="metodo" formControlName="metodo" list="metodos-pago" maxlength="40" placeholder="Selecciona o escribe un método" autocomplete="off" />
+          <datalist id="metodos-pago">
+            <option value="Efectivo"></option>
+            <option value="Transferencia"></option>
+            <option value="Tarjeta crédito"></option>
+            <option value="PSE"></option>
+          </datalist>
+          @if (form.controls.metodo.touched && form.controls.metodo.invalid) {
+            <small class="validacion">El método es obligatorio (máximo 40 caracteres).</small>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="fecha">Fecha del pago <span class="requerido">*</span></label>
+          <input id="fecha" formControlName="fecha" type="date" />
+          @if (form.controls.fecha.touched && form.controls.fecha.invalid) {
+            <small class="validacion">La fecha es obligatoria.</small>
+          }
+        </div>
+
+        <div class="acciones-formulario">
+          <button class="boton-principal" type="submit" [disabled]="form.invalid || guardando()">
+            {{ guardando() ? 'Guardando…' : editandoId() !== null ? 'Actualizar pago' : 'Guardar pago' }}
+            <span aria-hidden="true">↗</span>
+          </button>
+          @if (editandoId() !== null) {
+            <button class="boton-cancelar" type="button" (click)="cancelarEdicion()" [disabled]="guardando()">Cancelar edición</button>
+          }
+        </div>
+      </form>
+      <p class="nota-formulario"><span aria-hidden="true">✳</span> Los campos con * son obligatorios.</p>
+    </section>
+
+    <section class="panel panel-listado" aria-labelledby="titulo-listado">
+      <div class="listado-encabezado">
+        <div>
+          <span class="panel-kicker">TU ACTIVIDAD</span>
+          <h2 id="titulo-listado">Historial de pagos <span class="contador">{{ pagos().length }}</span></h2>
+          <p class="panel-intro">Consulta y administra todos los pagos registrados.</p>
+        </div>
+        <button class="boton-actualizar" type="button" (click)="cargarPagos()" [disabled]="cargandoLista()" aria-label="Actualizar lista de pagos" title="Actualizar lista">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 6.7M20 5v6h-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+      </div>
+
+      @if (error()) {
+        <div class="mensaje-error" role="alert">{{ error() }}</div>
+      }
+
+      @if (cargandoLista()) {
+        <div class="estado-lista" role="status"><span class="cargando-icono"></span> Cargando pagos…</div>
+      } @else if (pagos().length === 0 && !error()) {
+        <div class="estado-lista vacio">
+          <span class="vacio-icono" aria-hidden="true">▤</span>
+          <strong>Aún no hay pagos</strong>
+          <span>Cuando registres el primero, aparecerá aquí.</span>
+        </div>
+      } @else if (pagos().length > 0) {
+        <div class="tabla-contenedor">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">REFERENCIA</th>
+                <th scope="col">FACTURA</th>
+                <th scope="col">MÉTODO</th>
+                <th scope="col">FECHA</th>
+                <th scope="col" class="columna-acciones">ACCIONES</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (pago of pagos(); track pago.id) {
+                <tr>
+                  <td><span class="referencia">{{ pago.referencia }}</span><span class="id-registro">ID #{{ pago.id }}</span></td>
+                  <td><span class="factura">{{ pago.facturaNumero || 'Sin factura' }}</span></td>
+                  <td><span class="metodo"><span class="metodo-punto"></span>{{ pago.metodo }}</span></td>
+                  <td class="fecha-tabla">{{ pago.fecha }}</td>
+                  <td class="acciones-tabla">
+                    <button class="boton-editar" type="button" (click)="editar(pago)" [disabled]="guardando() || eliminandoId() !== null" [attr.aria-label]="'Editar pago ' + pago.referencia">Editar</button>
+                    <button class="boton-eliminar" type="button" (click)="eliminar(pago)" [disabled]="guardando() || eliminandoId() !== null" [attr.aria-label]="'Eliminar pago ' + pago.referencia">
+                      {{ eliminandoId() === pago.id ? 'Eliminando…' : 'Eliminar' }}
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <div class="tabla-pie">Mostrando {{ pagos().length }} {{ pagos().length === 1 ? 'pago' : 'pagos' }}</div>
+      }
+    </section>
+  </div>
+</main>

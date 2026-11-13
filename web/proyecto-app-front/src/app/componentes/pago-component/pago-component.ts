@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { DatosPago, Pago, PagoService } from '../../services/pago-service';
@@ -14,6 +14,8 @@ export class PagoComponent implements OnInit {
   private readonly pagoService = inject(PagoService);
 
   readonly pagos = signal<Pago[]>([]);
+  readonly pagosConFactura = computed(() => this.pagos().filter(p => !!p.facturaNumero?.trim()).length);
+  readonly metodosUtilizados = computed(() => new Set(this.pagos().map(p => p.metodo.trim()).filter(Boolean)).size);
   readonly cargandoLista = signal(true);
   readonly guardando = signal(false);
   readonly eliminandoId = signal<number | null>(null);
